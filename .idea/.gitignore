@@ -7,7 +7,7 @@
 # 基于编辑器的 HTTP 客户端请求
 /httpRequests/
 # User ================================
-# 鐢ㄦ埛鑷畾涔夌殑鍏朵粬蹇界暐鏂囦欢
+# 用户自定义的其他忽略文件
 
 # Clion ================================
 # Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio and WebStorm
