@@ -1,0 +1,13 @@
+//
+// Created by sugar on 2022/8/27.
+//
+
+#ifndef HEARTSTONECALCULATOR_PROPERTY_H
+#define HEARTSTONECALCULATOR_PROPERTY_H
+
+class Property
+{
+
+};
+
+#endif //HEARTSTONECALCULATOR_PROPERTY_H
