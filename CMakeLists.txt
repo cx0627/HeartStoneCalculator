@@ -3,4 +3,4 @@ project(HeartStoneCalculator)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(HeartStoneCalculator main.cpp card/Card.h)
+add_executable(HeartStoneCalculator main.cpp card/Card.h card/Handle.h card/Property.h)
