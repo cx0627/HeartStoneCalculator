@@ -6,18 +6,13 @@
 #define HEARTSTONECALCULATOR_HANDLE_H
 
 #include "Property.h"
+#include "HandleState.h"
 
 const int NO_OBJECT = -1;
 
-enum HandleState
-{
-    PlayCard,//打出卡牌
-    Battlecry//战吼
-};
-
 class Handle
 {
-private:
+protected:
     HandleState handleState;
 
 public:
@@ -33,12 +28,9 @@ public:
         return handleState;
     }
 
-    void run(Property *property)
-    {
-        run(property, NO_OBJECT);
+    virtual void run(Property *property, int position = NO_OBJECT){
+        puts("error");
     }
-
-    virtual void run(Property *property, int position = NO_OBJECT);
 };
 
 #endif //HEARTSTONECALCULATOR_HANDLE_H
