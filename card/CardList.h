@@ -1,0 +1,10 @@
+//
+// Created by sugar on 2022/8/28.
+//
+
+#ifndef HEARTSTONECALCULATOR_CARDLIST_H
+#define HEARTSTONECALCULATOR_CARDLIST_H
+
+#include "SpiritOfTheSharkCard.h"
+
+#endif //HEARTSTONECALCULATOR_CARDLIST_H
