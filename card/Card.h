@@ -12,17 +12,34 @@ using std::vector;
 
 class Card
 {
-private:
+protected:
     string name;
-    vector<Handle> handlerList;
+    int cost;
+    vector<Handle*> handlerList;
 
 public:
+    Card()
+    {
+
+    }
+
+    Card(string name, int cost)
+    {
+        this->name = name;
+        this->cost = cost;
+    }
+
     string getName()
     {
         return name;
     }
 
-    int addHandle(Handle handle)
+    int getCost()
+    {
+        return cost;
+    }
+
+    virtual int addHandle(Handle* handle)
     {
         handlerList.push_back(handle);
         return handlerList.size();
@@ -36,6 +53,54 @@ public:
     void ClearHandleList()
     {
         handlerList.clear();
+    }
+
+    void work()
+    {
+        handlerList[0]->run(new Property());
+        handlerList[1]->run(new Property());
+    }
+};
+
+//战吼牌
+class BattlecryCard : virtual public Card
+{
+public:
+    BattlecryCard()
+    {
+    }
+};
+
+//连击牌
+class HitCard : virtual public Card
+{
+public:
+    HitCard()
+    {
+    }
+
+};
+
+//随从牌
+class AttendantCard : virtual public Card
+{
+protected:
+    int attack;
+    int health;
+public:
+    AttendantCard()
+    {
+
+    }
+
+    int getAttack()
+    {
+        return attack;
+    }
+
+    int getHealth()
+    {
+        return health;
     }
 };
 
