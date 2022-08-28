@@ -9,45 +9,66 @@
 #include "Handle.h"
 #include "Property.h"
 
-class SpiritOfTheSharkPlayCardHandle : public Handle
+class SpiritOfTheSharkAfterPlayCardHandle : public Handle
 {
 public:
-    SpiritOfTheSharkPlayCardHandle()
+    SpiritOfTheSharkAfterPlayCardHandle()
     {
-        this->handleState = PlayCard;
+        this->handleState = AfterPlayCard;
     }
 
-    void run(Property *property, int position){
-        property->setDoubleHitNumber(property->getDoubleHitNumber() + 1);
-//        puts("s1");
+    void run(Property *property, int position)
+    {
+        property->setDoubleComboNumber(property->getDoubleComboNumber() + 1);
+        property->setDoubleBattlecryNumber(property->getDoubleBattlecryNumber() + 1);
+        return;
     }
 };
 
-class SpiritOfTheSharkDeathHandle : public Handle
+class SpiritOfTheSharkAfterDeathHandle : public Handle
 {
 public:
-    SpiritOfTheSharkDeathHandle()
+    SpiritOfTheSharkAfterDeathHandle()
     {
-        this->handleState = Death;
+        this->handleState = AfterDeath;
     }
 
-    void run(Property *property, int position){
-        property->setDoubleHitNumber(property->getDoubleHitNumber() - 1);
-//        puts("s2");
+    void run(Property *property, int position)
+    {
+        property->setDoubleComboNumber(property->getDoubleComboNumber() - 1);
+        property->setDoubleBattlecryNumber(property->getDoubleBattlecryNumber() - 1);
     }
 };
 
-class SpiritOfTheShark : public AttendantCard
+//鲨鱼之灵
+class SpiritOfTheSharkCard : public AttendantCard
 {
 public:
-    SpiritOfTheShark()
+    SpiritOfTheSharkCard()
     {
+        this->targetType = TargetType::NotTarget;
         this->name = "SpiritOfTheShark";
         this->cost = 4;
         this->attack = 0;
         this-> health = 3;
-        addHandle(new SpiritOfTheSharkPlayCardHandle());
-        addHandle(new SpiritOfTheSharkDeathHandle());
+        addHandle(new SpiritOfTheSharkAfterPlayCardHandle());
+        addHandle(new SpiritOfTheSharkAfterDeathHandle());
+    }
+
+    SpiritOfTheSharkCard(SpiritOfTheSharkCard* spiritOfTheSharkCard)
+    {
+        this->targetType = spiritOfTheSharkCard->getTargetType();
+        this->name = spiritOfTheSharkCard->getName();
+        this->cost = spiritOfTheSharkCard->getCost();
+        this->attack = spiritOfTheSharkCard->getAttack();
+        this-> health = spiritOfTheSharkCard->getHealth();
+        addHandle(new SpiritOfTheSharkAfterPlayCardHandle());
+        addHandle(new SpiritOfTheSharkAfterDeathHandle());
+    }
+
+    Card* getCardBySelf()
+    {
+        return new SpiritOfTheSharkCard(this);
     }
 };
 

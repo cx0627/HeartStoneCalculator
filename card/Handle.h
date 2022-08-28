@@ -8,7 +8,7 @@
 #include "Property.h"
 #include "HandleState.h"
 
-const int NO_OBJECT = -1;
+const int NO_TARGET = -1;
 
 class Handle
 {
@@ -28,7 +28,7 @@ public:
         return handleState;
     }
 
-    virtual void run(Property *property, int position = NO_OBJECT){
+    virtual void run(Property *property, int position = NO_TARGET){
         puts("error");
     }
 };
