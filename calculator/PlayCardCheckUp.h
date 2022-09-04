@@ -7,22 +7,42 @@
 
 #include "../card/Card.h"
 #include "../card/Property.h"
-
-inline int max(int a, int b)
-{
-    return a > b ? a : b;
-}
+#include "../util/util.h"
 
 class PlayCardCheckUp
 {
 public:
     bool PreCheckUp(Card* card, Property* property)
     {
-        if(!PreAttendantNumCheckUp(card, property)) {
+        if (!PreAttendantNumCheckUp(card, property)) {
             return false;
         }
-        if(PreCostCheckUp(card, property) > property->getLastCost()) {
+        if (PreCostCheckUp(card, property) > property->getLastCost()) {
             return false;
+        }
+        if (!PreTargetCheckUp(card, property)) {
+            return false;
+        }
+        return true;
+    }
+
+    //检查是否有合法目标
+    bool PreTargetCheckUp(Card* card, Property* property)
+    {
+        if (card->getTargetType() == TargetType::NotTarget)
+            return true;
+        if (card->getTargetType() == TargetType::CanSpecifyTarget)
+            return true;
+        if (card->getTargetType() == TargetType::CanSpecifyFriendlyTarget)
+            return true;
+        if (card->getTargetType() == TargetType::MustSpecifyFriendlyTarget && property->getAttendantNum() == 0)
+            return false;
+        if (card->getTargetType() == TargetType::SpecialTarget)
+        {
+            if (card->getNextLegalTarget(0, property) != -1)
+                return true;
+            else
+                return false;
         }
         return true;
     }
@@ -32,10 +52,14 @@ public:
     int PreCostCheckUp(Card* card, Property* property)
     {
         int tmpCost = card->getCost();
-        if (dynamic_cast<HitCard*>(card) != nullptr)
+
+        tmpCost -= property->getFirstCardReduceCost();
+
+        if (dynamic_cast<ComboCard*>(card) != nullptr)
         {
-            tmpCost -= property->getFirstHitCardReduceCost();
+            tmpCost -= property->getFirstComboCardReduceCost();
         }
+
         return max(0, tmpCost);
     }
 
@@ -59,12 +83,17 @@ public:
     int CostCount(Card* card, Property* property)
     {
         int tmpCost = card->getCost();
-        if (dynamic_cast<HitCard*>(card) != nullptr)
+
+        tmpCost -= property->getFirstCardReduceCost();
+        property->setFirstCardReduceCost(property->getSecondCardReduceCost());
+        property->setSecondCardReduceCost(0);
+
+        if (dynamic_cast<ComboCard*>(card) != nullptr)
         {
-            tmpCost -= property->getFirstHitCardReduceCost();
-            property->setFirstHitCardReduceCost(0);
+            tmpCost -= property->getFirstComboCardReduceCost();
+            property->setFirstComboCardReduceCost(0);
         }
-        property->setLastCost(property->getLastCost() - max(0, tmpCost));
+
         return max(0, tmpCost);
     }
 };

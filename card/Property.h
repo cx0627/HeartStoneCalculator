@@ -6,21 +6,27 @@
 #define HEARTSTONECALCULATOR_PROPERTY_H
 
 #include "Card.h"
+#include "HandleState.h"
+#include "Handle.h"
 
 //默认场上怪上限
 const int DEFAULT_ATTENDANTS_NUM = 7;
 //默认手牌上限
 const int DEFAULT_CARDS_NUM = 10;
+//默认费用上限
+const int DEFAULT_MAX_COST = 10;
+
 
 class Card;
+Card* getNewCardCopy(Card* card);
 
 class Property
 {
 private:
     //是否双倍连击
-    int doubleHitNumber = 0;
+    int doubleComboNumber = 0;
     //下一张连击牌减费
-    int firstHitCardReduceCost = 0;
+    int firstComboCardReduceCost = 0;
     //剩余费用
     int lastCost = 0;
     //手牌
@@ -31,23 +37,71 @@ private:
     Card* attendants[DEFAULT_ATTENDANTS_NUM];
     //手牌数量
     int attendantNum = 0;
+    //当前打出牌的数量
+    int playCardNum = 0;
+    //是否双倍战吼
+    int doubleBattlecryNumber = 0;
+    //造成的伤害
+    int damage = 0;
+    //下一张牌减费
+    int firstCardReduceCost = 0;
+    //下下一张牌减费
+    int secondCardReduceCost = 0;
 
 public:
+
     Property()
     {
-
+        for (int i = 0; i < DEFAULT_CARDS_NUM; i++) {
+            this->cards[i] = nullptr;
+        }
+        for (int i = 0; i < DEFAULT_ATTENDANTS_NUM; i++) {
+            this->attendants[i] = nullptr;
+        }
     }
 
     Property(Property* property)
     {
-        this->doubleHitNumber = property->doubleHitNumber;
-        this->firstHitCardReduceCost = property->firstHitCardReduceCost;
-        for (int i = i; i < DEFAULT_CARDS_NUM; i++) {
-            this->cards[i] = property->cards[i];
+        this->doubleComboNumber = property->doubleComboNumber;
+        this->doubleBattlecryNumber = property->doubleBattlecryNumber;
+        this->firstComboCardReduceCost = property->firstComboCardReduceCost;
+        this->firstCardReduceCost = property->firstCardReduceCost;
+        this->secondCardReduceCost = property->secondCardReduceCost;
+        this->lastCost = property->lastCost;
+        this->cardNum = property->cardNum;
+        this->attendantNum = property->attendantNum;
+        this->playCardNum = property->playCardNum;
+        this->damage = property->damage;
+        for (int i = 0; i < DEFAULT_CARDS_NUM; i++) {
+            this->cards[i] = getNewCardCopy(property->cards[i]);
         }
-        for (int i = i; i < DEFAULT_ATTENDANTS_NUM; i++) {
-            this->attendants[i] = property->attendants[i];
+        for (int i = 0; i < DEFAULT_ATTENDANTS_NUM; i++) {
+            this->attendants[i] = getNewCardCopy(property->attendants[i]);
         }
+    }
+
+    int getDamage() const {
+        return damage;
+    }
+
+    void setDamage(int damage) {
+        Property::damage = damage;
+    }
+
+    int getFirstCardReduceCost() const {
+        return firstCardReduceCost;
+    }
+
+    void setFirstCardReduceCost(int firstCardReduceCost) {
+        Property::firstCardReduceCost = firstCardReduceCost;
+    }
+
+    int getSecondCardReduceCost() const {
+        return secondCardReduceCost;
+    }
+
+    void setSecondCardReduceCost(int secondCardReduceCost) {
+        Property::secondCardReduceCost = secondCardReduceCost;
     }
 
     Card* getCard(int position)
@@ -62,7 +116,8 @@ public:
 
     void addCard(Card *card)
     {
-        cards[cardNum++] = card;
+        if(cardNum < DEFAULT_CARDS_NUM)
+            cards[cardNum++] = card;
     }
 
     Card* deleteCard(int position)
@@ -77,9 +132,29 @@ public:
         return tmpCard;
     }
 
-    void addAttendant(int position, Card *card)
+    int getDoubleBattlecryNumber()
     {
-        attendants[cardNum++] = card;
+        return doubleBattlecryNumber;
+    }
+
+    void setDoubleBattlecryNumber(int doubleBattlecryNumber)
+    {
+        this->doubleBattlecryNumber = doubleBattlecryNumber;
+    }
+
+    void addAttendant(Card *card)
+    {
+        attendants[attendantNum++] = card;
+    }
+
+    void deleteAttendant(Card *card)
+    {
+        for (int i = 0; i < attendantNum; i++) {
+            if (attendants[i] == card) {
+                deleteAttendant(i);
+                return;
+            }
+        }
     }
 
     Card* deleteAttendant(int position)
@@ -114,24 +189,24 @@ public:
         return attendantNum;
     }
 
-    int getFirstHitCardReduceCost()
+    int getFirstComboCardReduceCost()
     {
-        return firstHitCardReduceCost;
+        return firstComboCardReduceCost;
     }
 
-    void setFirstHitCardReduceCost(int firstHitCardReduceCost)
+    void setFirstComboCardReduceCost(int firstComboCardReduceCost)
     {
-        Property::firstHitCardReduceCost = firstHitCardReduceCost;
+        Property::firstComboCardReduceCost = firstComboCardReduceCost;
     }
 
-    int getDoubleHitNumber()
+    int getDoubleComboNumber()
     {
-        return doubleHitNumber;
+        return doubleComboNumber;
     }
 
-    void setDoubleHitNumber(int doubleHitNumber)
+    void setDoubleComboNumber(int doubleComboNumber)
     {
-        Property::doubleHitNumber = doubleHitNumber;
+        Property::doubleComboNumber = doubleComboNumber;
     }
 
     int getLastCost()
@@ -144,9 +219,21 @@ public:
         this->lastCost = lastCost;
     }
 
+    int getPlayCardNum()
+    {
+        return playCardNum;
+    }
+
+    void setPlayCardNum(int playCardNum)
+    {
+        this->playCardNum = playCardNum;
+    }
+
     static Property* createProperty(Property* property)
     {
-        return new Property(property);
+        Property* aProperty= new Property(property);
+        aProperty->setPlayCardNum(aProperty->getPlayCardNum() + 1);
+        return aProperty;
     }
 };
 
