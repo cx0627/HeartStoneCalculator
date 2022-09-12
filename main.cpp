@@ -36,6 +36,7 @@ int main() {
 //    property.addCard(new ShadowStepCard());
 //    property.addCard(new ShadowStepCard());
 //    property.addCard(new ScabbsCutterbutterCard());
+
 //    SpiritOfTheSharkCard* spiritOfTheShark = new SpiritOfTheSharkCard();
 //    spiritOfTheShark->getNextLegalTarget(0, &property);
 //    cout << defaultPlayCardCheckUp.PreCheckUp(property.getCard(0), &property) << endl;
