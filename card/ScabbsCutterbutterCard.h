@@ -52,6 +52,11 @@ public:
     {
         return new ScabbsCutterbutterCard(this);
     }
+
+    int getRealCost()
+    {
+        return 4;
+    }
 };
 
 #endif //HEARTSTONECALCULATOR_SCABBSCUTTERBUTTERCARD_H

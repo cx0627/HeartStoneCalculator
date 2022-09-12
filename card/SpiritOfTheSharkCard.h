@@ -70,6 +70,11 @@ public:
     {
         return new SpiritOfTheSharkCard(this);
     }
+
+    int getRealCost()
+    {
+        return 4;
+    }
 };
 
 #endif //HEARTSTONECALCULATOR_SPIRITOFTHESHARKCARD_H

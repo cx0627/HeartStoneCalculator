@@ -162,7 +162,7 @@ public:
         if (position >= attendantNum || position < 0)
             return nullptr;
         Card* tmpCard = attendants[position];
-        for (int i = position; i < attendantNum; i++) {
+        for (int i = position; i < attendantNum - 1; i++) {
             attendants[i] = attendants[i + 1];
         }
         attendantNum--;

@@ -52,6 +52,11 @@ public:
     {
         return new CoinCard(this);
     }
+
+    int getRealCost()
+    {
+        return 0;
+    }
 };
 
 #endif //HEARTSTONECALCULATOR_COINCARD_H

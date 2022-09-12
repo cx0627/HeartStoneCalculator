@@ -19,7 +19,7 @@ public:
 
     void run(Property *property, int position)
     {
-        property->setDamage(property->getDamage() + property->getPlayCardNum());
+        property->setDamage(property->getDamage() + property->getPlayCardNum() - 1);
     }
 };
 
@@ -50,6 +50,11 @@ public:
     Card* getCardBySelf()
     {
         return new SpectralPillagerCard(this);
+    }
+
+    int getRealCost()
+    {
+        return 6;
     }
 };
 

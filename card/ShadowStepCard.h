@@ -10,10 +10,10 @@
 #include "Property.h"
 #include "../util/util.h"
 
-class ShadowStepCardCardHandle : public Handle
+class ShadowStepPlayCardHandle : public Handle
 {
 public:
-    ShadowStepCardCardHandle()
+    ShadowStepPlayCardHandle()
     {
         this->handleState = PlayCard;
     }
@@ -23,6 +23,8 @@ public:
         Card* tmpCard = getNewCardCopy(property->getAttendant(position));
         tmpCard->setCost(max(0, tmpCard->getCost() - 2));
         property->addCard(tmpCard);
+        property->deleteAttendant(position);
+        RunAllHandleWith(tmpCard, AfterDeath, property);
     }
 };
 
@@ -35,7 +37,7 @@ public:
         this->targetType = TargetType::MustSpecifyFriendlyTarget;
         this->name = "ShadowStep";
         this->cost = 0;
-        addHandle(new ShadowStepCardCardHandle());
+        addHandle(new ShadowStepPlayCardHandle());
     }
 
     ShadowStepCard(ShadowStepCard* shadowStepCard)
@@ -43,12 +45,17 @@ public:
         this->targetType = shadowStepCard->getTargetType();
         this->name = shadowStepCard->getName();
         this->cost = shadowStepCard->getCost();
-        addHandle(new ShadowStepCardCardHandle());
+        addHandle(new ShadowStepPlayCardHandle());
     }
 
     Card* getCardBySelf()
     {
         return new ShadowStepCard(this);
+    }
+
+    int getRealCost()
+    {
+        return 0;
     }
 };
 
