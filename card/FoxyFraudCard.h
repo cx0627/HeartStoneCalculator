@@ -51,6 +51,11 @@ public:
     {
         return new FoxyFraudCard(this);
     }
+
+    int getRealCost()
+    {
+        return 2;
+    }
 };
 
 #endif //HEARTSTONECALCULATOR_FOXYFRAUDCARD_H

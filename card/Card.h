@@ -87,6 +87,12 @@ public:
         return false;
     }
 
+    //获取真实费用
+    virtual int getRealCost()
+    {
+        return -1;
+    }
+
     int getNextLegalTarget(int position, Property* property)
     {
         isLegalTarget(property->getAttendant(0));

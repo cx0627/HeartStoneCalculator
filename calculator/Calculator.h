@@ -18,6 +18,7 @@ class Calculator
 private:
     string cardsName[55];
     int maxDamage = 0;
+    int cnt = 0;
 
 //    void RunAllHandleWith(Card* card, HandleState handleState, Property* property, int target = NO_TARGET)
 //    {
@@ -47,12 +48,29 @@ private:
     {
 //        if (property->getPlayCardNum() > 5)
 //            return;
-//        if (property->getDamage() > maxDamage || property->getPlayCardNum() >= 3)
+        if (property->getDamage() > maxDamage) {
+            maxDamage = property->getDamage();
             print(property);
+            cout << maxDamage << endl;
+        }
+//        cnt ++;
+//        if (cnt >= 10000000) {
+//            if (cnt == 10000000)
+//                cout << "NO" << endl;
+//            return;
+//        }
+//        print(property);
+//        cout << property->getDamage() << endl;
         int cardNum = property->getCardNum();
+//        if (property->getCardNum() == 1 && property->getCard(0)->getName().compare("FoxyFraud") == 0
+//            && property->getPlayCardNum() == 16 && property->getDamage() == 14
+//            && cardsName[15].compare("ShadowStep(FoxyFraud)(0)") == 0) {
+//            cnt = 0;
+//        }
         for (int position = 0; position < cardNum; position++) {
             if (property->getCard(position)->getTargetType() == TargetType::NotTarget
-                || property->getCard(position)->getTargetType() == TargetType::CanSpecifyFriendlyTarget)
+                || (property->getCard(position)->getTargetType() == TargetType::CanSpecifyFriendlyTarget
+                && property->getAttendantNum() == 0))
             {
                 if (!defaultPlayCardCheckUp.PreCheckUp(property->getCard(position), property)) {
                     continue;
@@ -64,12 +82,14 @@ private:
 //                    cout << property->getPlayCardNum() << ":" <<  property->getCard(position)->getName() <<std::endl;
                     Card* tmpCard = tmpProperty->getCard(position);
                     tmpProperty->deleteCard(position);
-                    PlayCardWith(tmpCard, tmpProperty);
+                    int cost = PlayCardWith(tmpCard, tmpProperty);
+                    cardsName[tmpProperty->getPlayCardNum() - 1] = cardsName[tmpProperty->getPlayCardNum() - 1] + "(" + std::to_string(cost) + ")";
                     work(tmpProperty);
                 }
             }
             if(property->getCard(position)->getTargetType() == TargetType::MustSpecifyFriendlyTarget
-               || property->getCard(position)->getTargetType() == TargetType::CanSpecifyFriendlyTarget)
+               || (property->getCard(position)->getTargetType() == TargetType::CanSpecifyFriendlyTarget
+                   && property->getAttendantNum() != 0))
             {
                 if (!defaultPlayCardCheckUp.PreCheckUp(property->getCard(position), property)) {
                     continue;
@@ -80,7 +100,8 @@ private:
                     cardsName[tmpProperty->getPlayCardNum() - 1] = tmpProperty->getCard(position)->getName() + "(" + tmpProperty->getAttendant(target)->getName() + ")";
                     Card* tmpCard = tmpProperty->getCard(position);
                     tmpProperty->deleteCard(position);
-                    PlayCardWith(tmpCard, tmpProperty, target);
+                    int cost = PlayCardWith(tmpCard, tmpProperty, target);
+                    cardsName[tmpProperty->getPlayCardNum() - 1] = cardsName[tmpProperty->getPlayCardNum() - 1] + "(" + std::to_string(cost) + ")";
                     work(tmpProperty);
                 }
 
@@ -97,7 +118,8 @@ private:
                     cardsName[tmpProperty->getPlayCardNum() - 1] = tmpProperty->getCard(position)->getName() + "(" + tmpProperty->getAttendant(target)->getName() + ")";
                     Card* tmpCard = tmpProperty->getCard(position);
                     tmpProperty->deleteCard(position);
-                    PlayCardWith(tmpCard, tmpProperty, target);
+                    int cost = PlayCardWith(tmpCard, tmpProperty, target);
+                    cardsName[tmpProperty->getPlayCardNum() - 1] = cardsName[tmpProperty->getPlayCardNum() - 1] + "(" + std::to_string(cost) + ")";
                     work(tmpProperty);
                     target++;
                 }
@@ -109,7 +131,7 @@ public:
 
     //模拟一张牌打出的过程
     //TODO
-    bool PlayCardWith(Card* card, Property* property, int target = NO_TARGET)
+    int PlayCardWith(Card* card, Property* property, int target = NO_TARGET)
     {
         int cost = defaultPlayCardCheckUp.CostCount(card, property);
         property->setLastCost(property->getLastCost() - cost);
@@ -125,11 +147,12 @@ public:
         }
         if (dynamic_cast<AttendantCard*>(card) != nullptr) {
             Card* tmpCard = getNewCardCopy(card);
-            tmpCard->addHandle(new AttendantDeathHandle(tmpCard));
+//            tmpCard->addHandle(new AttendantDeathHandle(tmpCard));
+            tmpCard->setCost(tmpCard->getRealCost());
             property->addAttendant(tmpCard);
         }
 
-        return true;
+        return cost;
     }
 
     void init()

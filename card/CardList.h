@@ -11,5 +11,8 @@
 #include "SpectralPillagerCard.h"
 #include "ScabbsCutterbutterCard.h"
 #include "ShadowStepCard.h"
+#include "TenwuOfTheRedSmokeCard.h"
+#include "MailboxDancerCard.h"
+#include "PotionOfIllusionCard.h"
 
 #endif //HEARTSTONECALCULATOR_CARDLIST_H
